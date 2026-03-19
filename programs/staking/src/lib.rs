@@ -12,9 +12,13 @@ declare_id!("5RqZov6TkQYw4ASzf84WPdMqSrjnc53ZfzysNHm9HDJh");
 pub mod staking {
     use super::*;
 
+    pub fn create_stake_account(ctx:Context<CreateStakeAccount>)->Result<()>{
+        let bump=ctx.bumps.vault;
+        create_stake_account::handler(ctx, bump)?;
+        Ok(())
+    }
     pub fn stake(ctx: Context<Stake>,amount:u64) -> Result<()> {
-        let bump =ctx.bumps.vault;
-        stake::handler(ctx, bump, amount)?;
+        stake::handler(ctx,amount)?;
         Ok(())
     }
 
