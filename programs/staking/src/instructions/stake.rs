@@ -6,24 +6,18 @@ pub struct Stake<'info>{
     #[account(mut)]
     pub user:Signer<'info>,
     #[account(
-        init_if_needed,
-        payer=user,
-        space=8+Vault::INIT_SPACE,
+        mut,
         seeds=[b"staking",user.key().as_ref()],
-        bump
+        bump = vault.bump
     )]
     pub vault:Account<'info,Vault>,
     pub system_program:Program<'info,System>
 }
 
 impl <'info> Stake<'info>{
-    pub fn stake(&mut self,bump:u8,amount:u64)->Result<()>{
+    pub fn stake(&mut self,amount:u64)->Result<()>{
         require!(amount>0,StakeError::AmountGTZero);
-        if self.vault.to_account_info().lamports()==0{
-            let time=Clock::get()?;
-            let time_stamp = time.unix_timestamp;
-            self.vault.set_inner(Vault { bump ,timestamp:time_stamp, total_points:0});
-        }
+
         let vault_amount=self.vault.to_account_info().lamports();
         let vault = &mut self.vault;
 
@@ -38,7 +32,7 @@ impl <'info> Stake<'info>{
     }
 }
 
-pub fn handler(ctx:Context<Stake>,bump:u8,amount:u64)->Result<()>{
-    ctx.accounts.stake(bump, amount)?;
+pub fn handler(ctx:Context<Stake>,amount:u64)->Result<()>{
+    ctx.accounts.stake(amount)?;
     Ok(())
 }
