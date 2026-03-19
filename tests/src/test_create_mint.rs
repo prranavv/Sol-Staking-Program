@@ -14,7 +14,7 @@ fn test_create_mint(){
     let signer = Keypair::new();
     let mint = Keypair::new();
     svm.airdrop(&signer.pubkey(), 1_000_000_000_000).unwrap();
-
+    
     let discrimator = [
         69,
         44,
