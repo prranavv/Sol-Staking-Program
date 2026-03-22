@@ -9,7 +9,8 @@ use crate::constants::*;
 pub struct Vault{
     pub bump:u8,
     pub timestamp:i64,
-    pub total_points:u64
+    pub total_points:u64,
+    pub stake_amount:u64
 }
 
 

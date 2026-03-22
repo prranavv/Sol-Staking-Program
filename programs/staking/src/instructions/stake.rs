@@ -18,10 +18,11 @@ impl <'info> Stake<'info>{
     pub fn stake(&mut self,amount:u64)->Result<()>{
         require!(amount>0,StakeError::AmountGTZero);
 
-        let vault_amount=self.vault.to_account_info().lamports();
         let vault = &mut self.vault;
 
+        let vault_amount=vault.stake_amount;
         vault.update_points(vault_amount)?; 
+        vault.stake_amount=vault.stake_amount.checked_add(vault_amount).unwrap();
         //Transfer the lamports from user to the vault
         let instruction = transfer(&self.user.key(), &self.vault.key(), amount);
         let accounts = [self.user.to_account_info(),self.vault.to_account_info(),self.system_program.to_account_info()];

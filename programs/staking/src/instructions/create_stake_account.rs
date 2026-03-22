@@ -20,7 +20,7 @@ impl<'info> CreateStakeAccount<'info>{
     pub fn create_stake_account(&mut self,bump:u8)->Result<()>{
         let time=Clock::get()?;
         let time_stamp = time.unix_timestamp;
-        self.vault.set_inner(Vault { bump ,timestamp:time_stamp, total_points:0});   
+        self.vault.set_inner(Vault { bump ,timestamp:time_stamp, total_points:0,stake_amount:0});   
         Ok(())
     }
 }

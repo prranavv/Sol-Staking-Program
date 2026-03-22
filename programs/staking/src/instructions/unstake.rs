@@ -20,17 +20,19 @@ pub struct Unstake<'info>{
 impl<'info> Unstake<'info>{
     pub fn unstake(&mut self,amount:u64)->Result<()>{
         require!(amount>0,StakeError::AmountGTZero);
-        require!(amount<=self.vault.to_account_info().lamports(),StakeError::AmountLTVault);
+        require!(amount<=self.vault.stake_amount,StakeError::AmountLTVault);
         
         let signer_seeds: &[&[&[u8]]]=&[&[b"staking",self.user.key.as_ref(),&[self.vault.bump]]];
 
         let vault = &mut self.vault;
-        let vault_amount=vault.get_lamports();
+        let vault_amount=vault.stake_amount;
         vault.update_points(vault_amount)?;
         let accounts = Transfer{
             from:vault.to_account_info(),
             to:self.user.to_account_info()
         };
+
+        vault.stake_amount=vault.stake_amount.checked_sub(vault_amount).unwrap();
         let cpi_context  =CpiContext::new(self.system_program.to_account_info(), accounts).with_signer(signer_seeds);
         transfer(cpi_context, amount)?;
 
