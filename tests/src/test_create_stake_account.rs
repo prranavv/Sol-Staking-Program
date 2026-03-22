@@ -1,8 +1,5 @@
 use litesvm::LiteSVM;
-use litesvm_token::{CreateAssociatedTokenAccount, CreateMint, MintTo};
 use solana_sdk::{message::{AccountMeta, Instruction}, pubkey::Pubkey, signature::{Keypair, read_keypair_file}, signer::Signer};
-use spl_associated_token_account::get_associated_token_address;
-use spl_token::native_mint::DECIMALS;
 use solana_transaction::{Transaction};
 
 #[test]
